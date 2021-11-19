@@ -1,0 +1,27 @@
+# Modify this file to fill in your information and then
+# run create_submission to generate a submission file.
+
+task: TRACKING_3D
+account_name: "ziqipang.z@gmail.com"
+# Change this to your unique method name. Max 25 chars.
+unique_method_name: "GNT-Track."
+
+authors: "Ziqi Pang, Zhichao Li, Naiyan Wang"
+
+affiliation: "UIUC, TuSimple."
+description: "Strongest Version"
+
+method_link: "A link to your method, e.g. paper, code etc."
+
+# See submission.proto for allowed types.
+sensor_type: LIDAR_ALL
+
+number_past_frames_exclude_current: -1
+number_future_frames_exclude_current: 0
+
+object_types: TYPE_VEHICLE
+object_types: TYPE_PEDESTRIAN
+object_types: TYPE_CYCLIST
+
+# Inference latency in seconds.
+latency_second: -1
