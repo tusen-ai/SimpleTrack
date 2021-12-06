@@ -5,9 +5,9 @@ This is the repository for our paper [SimpleTrack: Understanding and Rethinking 
 If you find our paper or code useful for you, please consider cite us by:
 ```
 @article{pang2021simpletrack,
-    title={{SimpleTrack: Understanding and rethinking 3d multi-object tracking}},
-    author={Pang, Ziqi and Li, Zhichao and Wang, Naiyan},
-    journal={arxiv 2111.09621},
-    year={2021}
+  title={SimpleTrack: Understanding and Rethinking 3D Multi-object Tracking},
+  author={Pang, Ziqi and Li, Zhichao and Wang, Naiyan},
+  journal={arXiv preprint arXiv:2111.09621},
+  year={2021}
 }
 ```
