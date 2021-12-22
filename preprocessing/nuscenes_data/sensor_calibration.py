@@ -6,10 +6,9 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--raw_data_folder', type=str, default='/mnt/truenas/scratch/weijun.liu/nuscenes/data/sets/nuscenes/')
-parser.add_argument('--output_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
+parser.add_argument('--raw_data_folder', type=str, default='../../../raw/nuscenes/data/sets/nuscenes/')
+parser.add_argument('--data_folder', type=str, default='../../../datasets/nuscenes/')
 parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
-parser.add_argument('--test', action='store_true', default=False)
 args = parser.parse_args()
 
 
@@ -57,25 +56,9 @@ def main(nusc, scene_names, root_path, calib_folder, mode):
 
 
 if __name__ == '__main__':
-    if args.test:
-        output_folder = os.path.join(args.output_folder, 'test')
-    else:
-        output_folder = os.path.join(args.output_folder, 'validation')
-
-    if args.mode == '2hz':
-        output_folder = output_folder + '_2hz'
-    elif args.mode == '20hz':
-        output_folder = output_folder + '_20hz'
-
-    calib_folder = os.path.join(output_folder, 'calib_info')
-    if not os.path.exists(calib_folder):
-        os.makedirs(calib_folder)
+    calib_folder = os.path.join(args.data_folder, 'calib_info')
+    os.makedirs(calib_folder, exist_ok=True)
     
-    if args.test:
-        test_scene_names = splits.create_splits_scenes()['test']
-        nusc = NuScenes(version='v1.0-test', dataroot=args.raw_data_folder, verbose=True)
-        main(nusc, test_scene_names, args.raw_data_folder, calib_folder, args.mode)
-    else:
-        val_scene_names = splits.create_splits_scenes()['val']
-        nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
-        main(nusc, val_scene_names, args.raw_data_folder, calib_folder, args.mode)
+    val_scene_names = splits.create_splits_scenes()['val']
+    nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
+    main(nusc, val_scene_names, args.raw_data_folder, calib_folder, args.mode)

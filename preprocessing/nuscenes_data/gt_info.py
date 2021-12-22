@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--raw_data_folder', type=str, default='/mnt/truenas/scratch/weijun.liu/nuscenes/data/sets/nuscenes/')
-parser.add_argument('--output_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
+parser.add_argument('--raw_data_folder', type=str, default='../../../raw/nuscenes/data/sets/nuscenes/')
+parser.add_argument('--data_folder', type=str, default='../../../datasets/nuscenes/')
 parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
 args = parser.parse_args()
 
@@ -64,7 +64,7 @@ def main(nusc, scene_names, root_path, gt_folder):
             if cur_sample_token == '':
                 break
 
-        np.savez_compressed(os.path.join(pc_folder, '{:}.npz'.format(scene_name)), 
+        np.savez_compressed(os.path.join(gt_folder, '{:}.npz'.format(scene_name)), 
             ids=IDS, types=inst_types, bboxes=bboxes)
         pbar.update(1)
     pbar.close()
@@ -72,14 +72,8 @@ def main(nusc, scene_names, root_path, gt_folder):
 
 
 if __name__ == '__main__':
-    if args.mode == '20hz':
-        output_folder = os.path.join(args.output_folder, 'validation_20hz')
-    elif args.mode == '2hz':
-        output_folder = os.path.join(args.output_folder, 'validation_2hz')
-
-    gt_folder = os.path.join(output_folder, 'gt_info')
-    if not os.path.exists(gt_folder):
-        os.makedirs(gt_folder)
+    gt_folder = os.path.join(args.data_folder, 'gt_info')
+    os.makedirs(gt_folder, exist_ok=True)
 
     val_scene_names = splits.create_splits_scenes()['val']
     nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)

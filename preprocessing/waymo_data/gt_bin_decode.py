@@ -1,17 +1,23 @@
-import os, math, numpy as np, itertools, argparse, json
+""" Process the .bin file of ground truth, and save it in our detection format.
+    Each sequence is a .npz file containing three fields: bboxes, types, ids.
+    bboxes, types, and ids follow the same format:
+    [[bboxes in frame 0],
+     [bboxes in frame 1],
+     ...
+     [bboxes in the last frame]]
+"""
+import os, numpy as np, argparse, json
 from mot_3d.data_protos import BBox
 import mot_3d.utils as utils
 import tensorflow.compat.v1 as tf
 from google.protobuf.descriptor import FieldDescriptor as FD
 tf.enable_eager_execution()
-from multiprocessing import Process, Pool
-from waymo_open_dataset import label_pb2
 from waymo_open_dataset.protos import metrics_pb2
 
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--out_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/waymo/sot/detection/gt/validation/')
-parser.add_argument('--file_path', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/waymo/mot/info/validation_gt.bin')
-parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/waymo/sot/')
+parser.add_argument('--data_folder', type=str, default='/../../../datasets/waymo/mot/')
+parser.add_argument('--file_path', type=str, default='../datasets/waymo/mot/info/validation_gt.bin')
 args = parser.parse_args()
 
 
@@ -118,4 +124,6 @@ def main(file_path, out_folder, data_folder):
 
 
 if __name__ == '__main__':
-    main(args.file_path, args.out_folder, args.data_folder)
+    out_folder = os.path.join(args.data_folder, 'detection', 'gt', 'dets')
+    os.makedirs(out_folder)
+    main(args.file_path, out_folder, args.data_folder)

@@ -3,13 +3,12 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
-parser.add_argument('--detection_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
+parser.add_argument('--raw_data_folder', type=str, default='../../../raw/nuscenes/data/sets/nuscenes/')
+parser.add_argument('--data_folder', type=str, default='../../../datasets/nuscenes/')
 parser.add_argument('--det_name', type=str, default='cp')
-parser.add_argument('--file_name', type=str, default='val.json')
+parser.add_argument('--file_path', type=str, default='val.json')
 parser.add_argument('--velo', action='store_true', default=False)
 parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
-parser.add_argument('--test', action='store_true', default=False)
 args = parser.parse_args()
 
 
@@ -35,17 +34,15 @@ def sample_result2bbox_array(sample):
     return trans + size + rot + [score]
 
 
-def main(det_name, file_name, detection_folder, data_folder, mode):
+def main(det_name, file_path, detection_folder, data_folder, mode):
     # dealing with the paths
     detection_folder = os.path.join(detection_folder, det_name)
-    raw_file_path = os.path.join(detection_folder, 'raw', file_name)
     output_folder = os.path.join(detection_folder, 'dets')
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    os.makedirs(output_folder, exist_ok=True)
     
     # load the detection file
     print('LOADING RAW FILE')
-    f = open(raw_file_path, 'r')
+    f = open(file_path, 'r')
     det_data = json.load(f)['results']
     f.close()
 
@@ -101,10 +98,7 @@ def main(det_name, file_name, detection_folder, data_folder, mode):
 
 
 if __name__ == '__main__':
-    if args.test:
-        data_folder = os.path.join(args.data_folder, 'test_{:}'.format(args.mode))
-    else:
-        data_folder = os.path.join(args.data_folder, 'validation_{:}'.format(args.mode))
-    detection_folder = os.path.join(data_folder, 'detection')
+    detection_folder = os.path.join(args.data_folder, 'detection')
+    os.makedirs(detection_folder, exist_ok=True)
 
-    main(args.det_name, args.file_name, detection_folder, data_folder, args.mode)
+    main(args.det_name, args.file_path, detection_folder, args.data_folder, args.mode)

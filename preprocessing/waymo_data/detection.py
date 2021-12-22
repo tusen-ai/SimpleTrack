@@ -1,6 +1,12 @@
 """ Extract the detections from .bin files
+    Each sequence is a .npz file containing three fields: bboxes, types, ids.
+    bboxes, types, and ids follow the same format:
+    [[bboxes in frame 0],
+     [bboxes in frame 1],
+     ...
+     [bboxes in the last frame]]
 """
-import os, math, numpy as np, itertools, argparse, json
+import os, numpy as np, argparse, json
 import tensorflow.compat.v1 as tf
 from tqdm import tqdm
 from google.protobuf.descriptor import FieldDescriptor as FD
@@ -11,16 +17,10 @@ from waymo_open_dataset.protos import metrics_pb2
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', type=str, default='public')
-parser.add_argument('--det_folder', type=str, default='../../../datasets/waymo/sot/detection/')
-parser.add_argument('--file_name', type=str, default='validation.bin')
-parser.add_argument('--data_folder', type=str, default='../../../datasets/waymo/sot/')
+parser.add_argument('--file_path', type=str, default='validation.bin')
+parser.add_argument('--data_folder', type=str, default='../../../datasets/waymo/mot/')
 parser.add_argument('--metadata', action='store_true', default=False)
-parser.add_argument('--id', action='store_true', default=False)
 args = parser.parse_args()
-
-args.output_folder = os.path.join(args.det_folder, args.name, 'dets')
-if not os.path.exists(args.output_folder):
-    os.makedirs(args.output_folder)
 
 
 def bbox_dict2array(box_dict):
@@ -52,7 +52,7 @@ def str_list_to_int(lst):
     return result
 
 
-def main(name, data_folder, det_folder, file_name, out_folder):
+def main(name, data_folder, det_folder, file_path, out_folder):
     # load timestamp and segment names
     ts_info_folder = os.path.join(data_folder, 'ts_info')
     ts_files = os.listdir(ts_info_folder)
@@ -66,7 +66,7 @@ def main(name, data_folder, det_folder, file_name, out_folder):
     
     # load detection file
     det_folder = os.path.join(det_folder, name)
-    f = open(os.path.join(det_folder, file_name), 'rb')
+    f = open(file_path, 'rb')
     objects = metrics_pb2.Objects()
     objects.ParseFromString(f.read())
     f.close()
@@ -192,4 +192,9 @@ def main(name, data_folder, det_folder, file_name, out_folder):
 
 
 if __name__ == '__main__':
-    main(args.name, args.data_folder, args.det_folder, args.file_name, args.output_folder)
+    det_folder = os.path.join(args.data_folder, 'detection')
+    os.makedirs(det_folder, exist_ok=True)
+    output_folder = os.path.join(det_folder, args.name, 'dets')
+    os.makedirs(args.output_folder, exist_ok=True)
+
+    main(args.name, args.data_folder, det_folder, args.file_path, output_folder)

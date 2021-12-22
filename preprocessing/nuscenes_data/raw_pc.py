@@ -7,10 +7,9 @@ import multiprocessing
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--raw_data_folder', type=str, default='/mnt/truenas/scratch/weijun.liu/nuscenes/data/sets/nuscenes/')
-parser.add_argument('--output_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
+parser.add_argument('--raw_data_folder', type=str, default='../../../raw/nuscenes/data/sets/nuscenes/')
+parser.add_argument('--data_folder', type=str, default='../../../datasets/nuscenes/')
 parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
-parser.add_argument('--test', action='store_true', default=False)
 parser.add_argument('--process', type=int, default=1)
 args = parser.parse_args()
 
@@ -66,36 +65,14 @@ def main(nusc, scene_names, root_path, pc_folder, mode, pid=0, process=1):
 
 
 if __name__ == '__main__':
-    if args.test:
-        output_folder = os.path.join(args.output_folder, 'test')
-    else:
-        output_folder = os.path.join(args.output_folder, 'validation')
-
-    if args.mode == '2hz':
-        output_folder = output_folder + '_2hz'
-    elif args.mode == '20hz':
-        output_folder = output_folder + '_20hz'
-
-    pc_folder = os.path.join(output_folder, 'pc', 'raw_pc')
-    if not os.path.exists(pc_folder):
-        os.makedirs(pc_folder)
-
-    if args.test:
-        raw_data_folder = os.path.join(args.raw_data_folder, 'v1.0-test')
-        test_scene_names = splits.create_splits_scenes()['test']
-        nusc = NuScenes(version='v1.0-test', dataroot=args.raw_data_folder, verbose=True)
-        pool = multiprocessing.Pool(args.process)
-        for pid in range(args.process):
-            result = pool.apply_async(main, args=(nusc, test_scene_names, 
-                raw_data_folder, pc_folder, args.mode, pid, args.process))
-        pool.close()
-        pool.join()
-    else:
-        val_scene_names = splits.create_splits_scenes()['val']
-        nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
-        pool = multiprocessing.Pool(args.process)
-        for pid in range(args.process):
-            result = pool.apply_async(main, args=(nusc, test_scene_names, 
-                args.raw_data_folder, pc_folder, args.mode, pid, args.process))
-        pool.close()
-        pool.join()
+    pc_folder = os.path.join(args.data_folder, 'pc', 'raw_pc')
+    os.makedirs(pc_folder, exist_ok=True)
+    
+    val_scene_names = splits.create_splits_scenes()['val']
+    nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
+    pool = multiprocessing.Pool(args.process)
+    for pid in range(args.process):
+        result = pool.apply_async(main, args=(nusc, val_scene_names, 
+            args.raw_data_folder, pc_folder, args.mode, pid, args.process))
+    pool.close()
+    pool.join()
