@@ -11,16 +11,9 @@ from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', type=str, default='baseline')
-# parser.add_argument('--obj_types', type=str, default='vehicle,pedestrian')
 parser.add_argument('--obj_types', type=str, default='vehicle,pedestrian,cyclist')
-parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/mot_results/')
-parser.add_argument('--raw_data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/waymo/sot/')
-parser.add_argument('--output_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/mot_results/')
-parser.add_argument('--mode', type=str, default='all')
-parser.add_argument('--src', type=str, default='summary')
-parser.add_argument('--velo', action='store_true', default=False)
-parser.add_argument('--accel', action='store_true', default=False)
-parser.add_argument('--output_file_name', type=str, default='pred')
+parser.add_argument('--result_folder', type=str, default='../mot_results/')
+parser.add_argument('--data_folder', type=str, default='../datasets/waymo/mot/')
 args = parser.parse_args()
 
 
@@ -53,8 +46,6 @@ def main(name, obj_type, result_folder, raw_data_folder, output_folder, output_f
     ts_info_folder = os.path.join(raw_data_folder, 'ts_info')
     ego_info_folder = os.path.join(raw_data_folder, 'ego_info')
     obj_list = list()
-    if args.mode == 'val':
-        file_names = file_names[100:]
 
     print('Converting TYPE {:} into WAYMO Format'.format(obj_type))
     pbar = tqdm(total=len(file_names))
@@ -170,12 +161,11 @@ def merge_results(output_folder, obj_types, output_file_name):
 
 if __name__ == '__main__':
     result_folder = os.path.join(args.result_folder, args.name)
-    output_folder = os.path.join(args.output_folder, args.name, 'bin')
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    output_folder = os.path.join(result_folder, 'bin')
+    os.makedirs(output_folder, exist_ok=True)
 
     obj_types = args.obj_types.split(',')
     for obj_type in obj_types:
-        main(args.name, obj_type, result_folder, args.raw_data_folder, output_folder, args.output_file_name)
+        main(args.name, obj_type, result_folder, args.data_folder, output_folder, 'pred')
     
-    merge_results(output_folder, obj_types, args.output_file_name)
+    merge_results(output_folder, obj_types, 'pred')

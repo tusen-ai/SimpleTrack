@@ -10,7 +10,7 @@ This step converts the information needed from `tf_records` into more handy form
 
 ```bash
 cd preprocess/waymo_data
-bash waymo_preprocess.sh raw_data_folder data_folder process_num
+bash waymo_preprocess.sh ${raw_data_folder} ${data_folder} ${process_num}
 ```
 
 ### 2. Ground Truth Information
@@ -21,7 +21,7 @@ To decode the ground truth information, suppose `bin_path` is the path to the gr
 
 ```bash
 cd preprocess/waymo_data
-python gt_bin_decode.py --data_folder data_dir --file_path bin_path
+python gt_bin_decode.py --data_folder ${data_dir} --file_path ${bin_path}
 ```
 
 ### 3. Detection
@@ -30,7 +30,7 @@ To infer 3D MOT on your detection file, we still need the `bin_path` indicating 
 
 ```bash
 cd preprocess/waymo_data
-python detection --name name --data_folder data_dir --file_path bin_path --metadata
+python detection --name ${name} --data_folder ${data_dir} --file_path ${bin_path} --metadata
 ```
 
 ## nuScenes
@@ -45,7 +45,7 @@ Run the following commands. (`proc_num` is used for accelerating the speed with 
 
 ```bash
 cd preprocess/nuscenes_data
-bash nuscenes_preprocess.sh raw_data_dir data_dir_2hz data_dir_20hz proc_num
+bash nuscenes_preprocess.sh ${raw_data_dir} ${data_dir_2hz} ${data_dir_20hz} ${proc_num}
 ```
 
 ### 2. Detection
@@ -56,8 +56,8 @@ To infer 3D MOT on your detection file, we convert the json format detection fil
 cd preprocess/nuscenes_data
 
 # for 2Hz detection file
-python detection.py --raw_data_folder raw_data_dir --data_folder data_dir_2hz --det_name name --file_path file_path --mode 2hz --velo
+python detection.py --raw_data_folder ${raw_data_dir} --data_folder ${data_dir_2hz} --det_name ${name} --file_path ${file_path} --mode 2hz --velo
 
 # for 20Hz detection file
-python detection.py --raw_data_folder raw_data_dir --data_folder data_dir_20hz --det_name name --file_path file_path --mode 20hz --velo
+python detection.py --raw_data_folder ${raw_data_dir} --data_folder ${data_dir_20hz} --det_name ${name} --file_path ${file_path} --mode 20hz --velo
 ```
