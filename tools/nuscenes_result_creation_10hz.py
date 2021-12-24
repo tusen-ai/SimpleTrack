@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', type=str, default='debug')
-parser.add_argument('--obj_types', type=str, default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
+parser.add_argument('--obj_types', type=str, default='motorcycle')
 parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/10hz_exps/')
 parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/validation_20hz/')
 args = parser.parse_args()
@@ -37,49 +37,27 @@ def bbox_array2nuscenes_format(bbox_array):
     return sample_result
 
 
-def frame_selection(ts_info):
-    counter = -1
-    selected = list()
-    is_key_frame_list = list()
-    frame_index = list()
-    for i, ts in enumerate(ts_info):
-        is_key_frame = ts[1]
-        counter += 1
-        if is_key_frame:
-            frame_index.append(i)
-            is_key_frame_list.append(True)
-            counter = 0
-            continue
-        elif counter % 5 == 0:
-            frame_index.append(i)
-            is_key_frame_list.append(False)
-    return frame_index, is_key_frame_list
-
-
 def main(name, obj_types, data_folder, result_folder, output_folder):
     for obj_type in obj_types:
         print('CONVERTING {:}'.format(obj_type))
         summary_folder = os.path.join(result_folder, 'summary', obj_type)
         file_names = sorted(os.listdir(os.path.join(data_folder, 'ego_info')))
         token_info_folder = os.path.join(data_folder, 'token_info')
-        ts_info_folder = os.path.join(data_folder, 'ts_info')
     
         results = dict()
         pbar = tqdm(total=len(file_names))
         for file_index, file_name in enumerate(file_names):
             segment_name = file_name.split('.')[0]
             token_info = json.load(open(os.path.join(token_info_folder, '{:}.json'.format(segment_name)), 'r'))
-            ts_info = json.load(open(os.path.join(ts_info_folder, '{:}.json'.format(segment_name)), 'r'))
             mot_results = np.load(os.path.join(summary_folder, '{:}.npz'.format(segment_name)), allow_pickle=True)
     
             ids, bboxes, states, types = \
                 mot_results['ids'], mot_results['bboxes'], mot_results['states'], mot_results['types']
             frame_num = len(ids)
-            
-            raw_frame_indexes, is_key_frame_list = frame_selection(ts_info)
+            token_info = [t for t in token_info if t[3]]
             for frame_index in range(frame_num):
-                frame_token = token_info[raw_frame_indexes[frame_index]]
-                is_key_frame = is_key_frame_list[frame_index]
+                frame_token = token_info[frame_index]
+                is_key_frame = frame_token[1]
                 if not is_key_frame:
                     continue
 

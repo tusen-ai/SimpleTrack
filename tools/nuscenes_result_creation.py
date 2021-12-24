@@ -7,8 +7,8 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', type=str, default='debug')
 parser.add_argument('--obj_types', type=str, default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
-parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
-parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/validation_2hz/')
+parser.add_argument('--result_folder', type=str, default='../nu_mot_results/')
+parser.add_argument('--data_folder', type=str, default='../datasets/nuscenes/')
 args = parser.parse_args()
 
 
@@ -62,8 +62,6 @@ def main(name, obj_types, data_folder, result_folder, output_folder):
                 
                 frame_obj_num = len(frame_ids)
                 for i in range(frame_obj_num):
-                    # if not Validity.valid(frame_states[i]):
-                    #     continue
                     sample_result = bbox_array2nuscenes_format(frame_bboxes[i])
                     sample_result['sample_token'] = sample_token
                     sample_result['tracking_id'] = frame_types[i] + '_' + str(frame_ids[i])
@@ -90,7 +88,6 @@ if __name__ == '__main__':
     output_folder = os.path.join(result_folder, 'results')
     for obj_type in obj_types:
         tmp_output_folder = os.path.join(result_folder, 'results', obj_type)
-        if not os.path.exists(tmp_output_folder):
-            os.makedirs(tmp_output_folder)
+        os.makedirs(tmp_output_folder, exist_ok=True)
     
     main(args.name, obj_types, args.data_folder, result_folder, output_folder)
