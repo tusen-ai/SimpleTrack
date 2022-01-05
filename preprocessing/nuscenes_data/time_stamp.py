@@ -50,6 +50,7 @@ def main(nusc, scene_names, root_path, ts_folder, mode):
 
 
 if __name__ == '__main__':
+    print('time stamp')
     ts_folder = os.path.join(args.data_folder, 'ts_info')
     os.makedirs(ts_folder, exist_ok=True)
 

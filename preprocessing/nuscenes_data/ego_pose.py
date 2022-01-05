@@ -55,6 +55,7 @@ def main(nusc, scene_names, root_path, ego_folder, mode):
 
 
 if __name__ == '__main__':
+    print('ego info')
     ego_folder = os.path.join(args.data_folder, 'ego_info')
     os.makedirs(ego_folder, exist_ok=True)
 

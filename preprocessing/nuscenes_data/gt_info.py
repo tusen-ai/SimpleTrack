@@ -3,6 +3,7 @@ from nuscenes.nuscenes import NuScenes
 from nuscenes.utils import splits
 from copy import deepcopy
 from tqdm import tqdm
+import pdb
 
 
 parser = argparse.ArgumentParser()
@@ -40,12 +41,13 @@ def main(nusc, scene_names, root_path, gt_folder):
             frame_ids, frame_types, frame_bboxes = list(), list(), list()
             if args.mode == '2hz':
                 frame_data = nusc.get('sample', cur_sample_token)
-                ann_tokens = frame_data['anns']
-                for ann in ann_tokens:
-                    instance = nusc.get('sample_annotation', ann)
-                    frame_ids.append(instance['instance_token'])
-                    frame_types.append(instance['category_name'])
-                    frame_bboxes.append(instance_info2bbox_array(instance))
+                lidar_token = frame_data['data']['LIDAR_TOP']
+                instances = nusc.get_boxes(lidar_token)
+                for inst in instances:
+                    frame_ids.append(inst.token)
+                    frame_types.append(inst.name)
+                    frame_bboxes.append(instance_info2bbox_array(inst))
+
             elif args.mode == '20hz':
                 frame_data = nusc.get('sample_data', cur_sample_token)
                 lidar_data = nusc.get('sample_data', cur_sample_token)
@@ -60,7 +62,7 @@ def main(nusc, scene_names, root_path, gt_folder):
             bboxes.append(frame_bboxes)
 
             # clean up and prepare for the next
-            cur_sample_token = lidar_data['next']
+            cur_sample_token = frame_data['next']
             if cur_sample_token == '':
                 break
 
@@ -72,6 +74,7 @@ def main(nusc, scene_names, root_path, gt_folder):
 
 
 if __name__ == '__main__':
+    print('gt info')
     gt_folder = os.path.join(args.data_folder, 'gt_info')
     os.makedirs(gt_folder, exist_ok=True)
 

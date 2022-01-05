@@ -78,7 +78,7 @@ def main(raw_data_folder, data_folder, process=1, token=0):
 
             frame_num += 1
             if frame_num % 10 == 0:
-                print('Record {} / {} FNumber {:}'.format(record_index + 1, len(tf_records), frame_num))
+                print('Point Cloud Record {} / {} FNumber {:}'.format(record_index + 1, len(tf_records), frame_num))
         print('{:} frames in total'.format(frame_num))
 
         np.savez_compressed(os.path.join(data_folder, "{}.npz".format(segment_name)), **pcs)

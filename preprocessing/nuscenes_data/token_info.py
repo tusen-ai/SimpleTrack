@@ -79,6 +79,7 @@ def main(nusc, scene_names, root_path, token_folder, mode):
 
 
 if __name__ == '__main__':
+    print('token info')
     os.makedirs(args.data_folder, exist_ok=True)
 
     token_folder = os.path.join(args.data_folder, 'token_info')

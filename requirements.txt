@@ -1,0 +1,6 @@
+numpy
+filterpy
+shapely
+numba
+pyquaternion
+nuscenes-devkit

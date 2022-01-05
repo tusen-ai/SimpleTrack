@@ -56,6 +56,7 @@ def main(nusc, scene_names, root_path, calib_folder, mode):
 
 
 if __name__ == '__main__':
+    print('sensor calib')
     calib_folder = os.path.join(args.data_folder, 'calib_info')
     os.makedirs(calib_folder, exist_ok=True)
     

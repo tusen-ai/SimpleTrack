@@ -41,11 +41,11 @@ To preprocessing the raw data from nuScenes, suppose you have put the raw data o
 * Only the data on the key frames (2Hz) is extracted, the target location is `data_dir_2hz`.
 * All the data (20Hz) is extracted to the location of `data_dir_20hz`.
 
-Run the following commands. (`proc_num` is used for accelerating the speed with multiple processes.)
+Run the following commands.
 
 ```bash
 cd preprocess/nuscenes_data
-bash nuscenes_preprocess.sh ${raw_data_dir} ${data_dir_2hz} ${data_dir_20hz} ${proc_num}
+bash nuscenes_preprocess.sh ${raw_data_dir} ${data_dir_2hz} ${data_dir_20hz}
 ```
 
 ### 2. Detection

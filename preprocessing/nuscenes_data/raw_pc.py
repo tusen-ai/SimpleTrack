@@ -65,14 +65,10 @@ def main(nusc, scene_names, root_path, pc_folder, mode, pid=0, process=1):
 
 
 if __name__ == '__main__':
+    print('point cloud')
     pc_folder = os.path.join(args.data_folder, 'pc', 'raw_pc')
     os.makedirs(pc_folder, exist_ok=True)
     
     val_scene_names = splits.create_splits_scenes()['val']
     nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
-    pool = multiprocessing.Pool(args.process)
-    for pid in range(args.process):
-        result = pool.apply_async(main, args=(nusc, val_scene_names, 
-            args.raw_data_folder, pc_folder, args.mode, pid, args.process))
-    pool.close()
-    pool.join()
+    main(nusc, val_scene_names, args.raw_data_folder, pc_folder, args.mode, 0, 1)
