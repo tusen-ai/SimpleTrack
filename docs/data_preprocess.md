@@ -9,7 +9,7 @@ We decompose the preprocessing of Waymo Open Dataset into the following steps.
 This step converts the information needed from `tf_records` into more handy forms. Suppose the folder storing `tf_records` is `raw_data_folder`, the target location if `data_folder`, run the following command: (you can specify `process_num` to be an integer greater than 1 for faster preprocessing.)
 
 ```bash
-cd preprocess/waymo_data
+cd preprocessing/waymo_data
 bash waymo_preprocess.sh ${raw_data_folder} ${data_folder} ${process_num}
 ```
 
@@ -20,7 +20,7 @@ The gorund truth for the 3D MOT and 3D Detection are the same. **You have to dow
 To decode the ground truth information, suppose `bin_path` is the path to the ground truth file, `data_folder` is the target location of data preprocess. Eventually, we store the ground truth information in `${data_folder}/detection/gt/dets/`.
 
 ```bash
-cd preprocess/waymo_data
+cd preprocessing/waymo_data
 python gt_bin_decode.py --data_folder ${data_dir} --file_path ${bin_path}
 ```
 
@@ -29,7 +29,7 @@ python gt_bin_decode.py --data_folder ${data_dir} --file_path ${bin_path}
 To infer 3D MOT on your detection file, we still need the `bin_path` indicating the path to the detection results, then name your detection as `name` for future convenience. The preprocessing of the detection follows the below scripts. (Only use `metadata` if you want to save the velocity / acceleration contained in the detection file.)
 
 ```bash
-cd preprocess/waymo_data
+cd preprocessing/waymo_data
 python detection --name ${name} --data_folder ${data_dir} --file_path ${bin_path} --metadata
 ```
 
@@ -44,7 +44,7 @@ To preprocessing the raw data from nuScenes, suppose you have put the raw data o
 Run the following commands.
 
 ```bash
-cd preprocess/nuscenes_data
+cd preprocessing/nuscenes_data
 bash nuscenes_preprocess.sh ${raw_data_dir} ${data_dir_2hz} ${data_dir_20hz}
 ```
 
@@ -53,7 +53,7 @@ bash nuscenes_preprocess.sh ${raw_data_dir} ${data_dir_2hz} ${data_dir_20hz}
 To infer 3D MOT on your detection file, we convert the json format detection files at `file_path` into the .npz files similar to our approach on Waymo Open Dataset. Please name your detection as `name` for future convenience. The preprocessing of the detection follows the below scripts. (Only use `velo` if you want to save the velocity contained in the detection file.)
 
 ```bash
-cd preprocess/nuscenes_data
+cd preprocessing/nuscenes_data
 
 # for 2Hz detection file
 python detection.py --raw_data_folder ${raw_data_dir} --data_folder ${data_dir_2hz} --det_name ${name} --file_path ${file_path} --mode 2hz --velo

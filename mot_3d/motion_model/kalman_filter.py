@@ -1,7 +1,9 @@
+""" Many parts are borrowed from https://github.com/xinshuoweng/AB3DMOT
+"""
+
 import numpy as np
 from ..data_protos import BBox
 from filterpy.kalman import KalmanFilter
-from .covariance import NuCovariance, WaymoCovariance
 
 
 class KalmanFilterMotionModel:
@@ -59,27 +61,18 @@ class KalmanFilterMotionModel:
         #                       [0,0,0,0,0,0,1,0,0,0,0]])
 
         self.covariance_type = covariance
-        if self.covariance_type == 'default':
-            # self.kf.R[0:,0:] *= 10.   # measurement uncertainty
-            self.kf.P[7:, 7:] *= 1000. 	# state uncertainty, give high uncertainty to the unobservable initial velocities, covariance matrix
-            self.kf.P *= 10.
-    
-            # self.kf.Q[-1,-1] *= 0.01    # process uncertainty
-            # self.kf.Q[7:, 7:] *= 0.01
+        # self.kf.R[0:,0:] *= 10.   # measurement uncertainty
+        self.kf.P[7:, 7:] *= 1000. 	# state uncertainty, give high uncertainty to the unobservable initial velocities, covariance matrix
+        self.kf.P *= 10.
 
-        elif self.covariance_type == 'nuscenes':
-            cov_name = self.covariance_type.split('_')[1]
-            cov = NuCovariance(cov_name)
-            self.kf.P = cov.P[inst_type][:-1, :-1]
-            self.kf.Q = cov.Q[inst_type][:-1, :-1]
-            self.kf.R = cov.R[inst_type][:, :]
-        elif 'waymo' in self.covariance_type:
-            cov_name = self.covariance_type.split('_')[1]
-            cov = WaymoCovariance(cov_name)
+        # self.kf.Q[-1,-1] *= 0.01    # process uncertainty
+        # self.kf.Q[7:, 7:] *= 0.01
 
         self.history = [bbox]
     
     def predict(self, time_stamp=None):
+        """ For the motion prediction, use the get_prediction function.
+        """
         self.kf.predict()
         if self.kf.x[3] >= np.pi: self.kf.x[3] -= np.pi * 2
         if self.kf.x[3] < -np.pi: self.kf.x[3] += np.pi * 2

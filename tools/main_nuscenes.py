@@ -114,7 +114,7 @@ def main(name, obj_types, config_path, data_folder, det_data_folder, result_fold
         file_names = sorted(os.listdir(os.path.join(data_folder, 'ego_info')))
         
         # load model configs
-        configs = yaml.load(open(config_path, 'r'))
+        configs = yaml.load(open(config_path, 'r'), Loader=yaml.Loader)
     
         for file_index, file_name in enumerate(file_names[:]):
             if file_index % process != token:

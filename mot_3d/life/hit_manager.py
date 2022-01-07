@@ -88,6 +88,9 @@ class HitManager:
         return (self.state == 'alive') and (self.no_asso == False)
     
     def state_string(self, frame_index):
+        """ Each tracklet use a state strong to represent its state
+            This string is used for determining output, etc.
+        """
         if self.state == 'birth':
             return '{:}_{:}'.format(self.state, self.hits)
         elif self.state == 'alive':

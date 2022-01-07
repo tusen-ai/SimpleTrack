@@ -1,6 +1,6 @@
 # SimpleTrack: Simple yet Effective 3D Multi-object Tracking
 
-This is the repository for our paper [SimpleTrack: Understanding and Rethinking 3D Multi-object Tracking](https://arxiv.org/abs/2111.09621).
+This is the repository for our paper [SimpleTrack: Understanding and Rethinking 3D Multi-object Tracking](https://arxiv.org/abs/2111.09621). We are still working on writing the documentations and cleaning up the code. However, we have already moved all of our code onto the `dev` branch, so please feel free to check it out if you really need to delve deep recently. We will try our best to get everything ready as soon as possible.
 
 If you find our paper or code useful for you, please consider cite us by:
 ```
@@ -11,6 +11,21 @@ If you find our paper or code useful for you, please consider cite us by:
   year={2021}
 }
 ```
+
+
+## Installation
+
+### Environment Requirements
+
+`SimpleTrack` requires `python>=3.6` and the packages of `pip install -r requiremens.txt`. For the experiments on Waymo Open Dataset, please install the devkit following the instructions at [waymo open dataset devkit](https://github.com/waymo-research/waymo-open-dataset).
+
+### Installation
+
+We implement the `SimpleTrack` algorithm as a library `mot_3d`. Please run `pip install -e ./` to install it locally.
+
+## Demo and API Example
+
+
 
 ## Experiments for Waymo Open Dataset
 
@@ -129,7 +144,7 @@ python tools/nuscenes_type_merge.py \
 For the setting of 10Hz, run the following commands.
 
 ```bash
-python tools/nuscenes_result_creation.py \
+python tools/nuscenes_result_creation_10hz.py \
     --name SimpleTrack10Hz \
     --name result_folder ${nuscenes_result_dir} \
     --data_folder ${nuscenes20hz_data_dir}

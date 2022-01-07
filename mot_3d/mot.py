@@ -58,11 +58,7 @@ class MOTModel:
             result = self.non_key_frame_mot(input_data)
             return result
     
-        if self.motion_model == 'velo':
-            matched, unmatched_dets, unmatched_trks = self.back_step_det(input_data)
-        elif 'kf' in self.motion_model:
-            matched, unmatched_dets, unmatched_trks = self.forward_step_trk(input_data)
-        elif 'ma' in self.motion_model:
+        if 'kf' in self.motion_model:
             matched, unmatched_dets, unmatched_trks = self.forward_step_trk(input_data)
         
         time_lag = input_data.time_stamp - self.time_stamp
@@ -149,6 +145,8 @@ class MOTModel:
         return matched, unmatched_dets, unmatched_trks
     
     def non_key_forward_step_trk(self, input_data: FrameData):
+        """ tracking on non-key frames (for nuScenes)
+        """
         dets = input_data.dets
         det_indexes = [i for i, det in enumerate(dets) if det.s >= 0.5]
         dets = [dets[i] for i in det_indexes]
@@ -172,53 +170,16 @@ class MOTModel:
             unmatched_dets[k] = det_indexes[unmatched_dets[k]]
         return matched, unmatched_dets, unmatched_trks
     
-    def back_step_det(self, input_data: FrameData):
-        # extract the detection information
-        dets, velos = input_data.dets, input_data.aux_info['velos']
-        det_indexes = [i for i, det in enumerate(dets) if det.s >= self.score_threshold]
-        dets, velos = [dets[i] for i in det_indexes], [velos[i] for i in det_indexes]
-
-        # back-step the detection and association
-        cur_time_stamp = input_data.time_stamp
-        time_lag = cur_time_stamp - self.time_stamp
-        
-        # back-step prediction
-        det_preds = list()
-        for det, velo in zip(dets, velos):
-            det_preds.append(utils.back_step_det(det, velo, time_lag))
-        trk_states = [trk.get_state() for trk in self.trackers]
-
-        # make every tracklet predict to hold the frame place
-        for trk in self.trackers:
-            trk.predict(input_data.time_stamp, input_data.aux_info['is_key_frame'])
-        
-        # for m-dis
-        trk_innovation_matrix = None
-        if self.asso == 'm_dis':
-            trk_innovation_matrix = [trk.compute_innovation_matrix() for trk in self.trackers]
-        
-        # association
-        matched, unmatched_dets, unmatched_trks = associate_dets_to_tracks(det_preds, trk_states, 
-            self.match_type, self.asso, self.asso_thres, trk_innovation_matrix)
-        
-        for k in range(len(matched)):
-            matched[k][0] = det_indexes[matched[k][0]]
-        for k in range(len(unmatched_dets)):
-            unmatched_dets[k] = det_indexes[unmatched_dets[k]]
-        return matched, unmatched_dets, unmatched_trks 
-    
     def non_key_frame_mot(self, input_data: FrameData):
+        """ tracking on non-key frames (for nuScenes)
+        """
         self.frame_count += 1
         # initialize the time stamp on frame 0
         if self.time_stamp is None:
             self.time_stamp = input_data.time_stamp
         
-        if self.motion_model == 'velo':
-            matched, unmatched_dets, unmatched_trks = self.back_step_det(input_data)
-        elif 'kf' in self.motion_model:
+        if 'kf' in self.motion_model:
             matched, unmatched_dets, unmatched_trks = self.non_key_forward_step_trk(input_data)
-        elif 'ma' in self.motion_model:
-            matched, unmatched_dets, unmatched_trks = self.forward_step_trk(input_data)
         time_lag = input_data.time_stamp - self.time_stamp
 
         redundancy_bboxes, update_modes = self.non_key_redundancy.bipartite_infer(input_data, self.trackers)

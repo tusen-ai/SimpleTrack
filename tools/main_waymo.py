@@ -105,7 +105,7 @@ def main(name, obj_type, config_path, data_folder, det_data_folder, result_folde
     print(file_names[0])
 
     # load model configs
-    configs = yaml.load(open(config_path, 'r'))
+    configs = yaml.load(open(config_path, 'r'), Loader=yaml.Loader)
     
     if obj_type == 'vehicle':
         type_token = 1

@@ -33,7 +33,7 @@ def pred_content_filter(pred_contents, pred_states):
     return result_contents
 
 def main(name, obj_type, result_folder, raw_data_folder, output_folder, output_file_name):
-    summary_folder = os.path.join(result_folder, args.src, obj_type)
+    summary_folder = os.path.join(result_folder, 'summary', obj_type)
     file_names = sorted(os.listdir(summary_folder))[:]
 
     if obj_type == 'vehicle':
@@ -65,12 +65,6 @@ def main(name, obj_type, result_folder, raw_data_folder, output_folder, output_f
         pred_ids = pred_content_filter(pred_ids, pred_states)
         pred_velos, pred_accels = None, None
 
-        if args.velo:
-            pred_velos = pred_result['velos']
-            pred_velos = pred_content_filter(pred_velos, pred_states)
-        if args.accel:
-            pred_accels = pred_result['accels']
-            pred_accels = pred_content_filter(pred_accels, pred_states)
         obj_list += create_sequence(pred_ids, pred_bboxes, type_token, context_name, 
             ts_data, ego_motions, pred_velos, pred_accels)
         pbar.update(1)
@@ -105,10 +99,6 @@ def create_single_pred_bbox(id, bbox, type_token, time_stamp, context_name, inv_
     o.score = bbox[-1]
 
     meta_data = label_pb2.Label.Metadata()
-    if args.velo:
-        meta_data.speed_x, meta_data.speed_y = velo[0], velo[1]
-    if args.accel:
-        meta_data.accel_x, meta_data.accel_y = accel[0], accel[1]
     o.object.metadata.CopyFrom(meta_data)
 
     o.object.id = '{:}_{:}'.format(type_token, id)
@@ -128,10 +118,6 @@ def create_sequence(pred_ids, pred_bboxes, type_token, context_name, time_stamps
             pred_id = pred_ids[frame_index][obj_index]
             pred_bbox = pred_bboxes[frame_index][obj_index]
             pred_velo, pred_accel = None, None
-            if args.velo:
-                pred_velo = pred_velos[frame_index][obj_index]
-            if args.accel:
-                pred_accel = pred_accels[frame_index][obj_index]
             sequence_objects.append(create_single_pred_bbox(
                 pred_id, pred_bbox, type_token, time_stamp, context_name, inv_ego_motion, pred_velo, pred_accel))
     return sequence_objects
