@@ -10,18 +10,15 @@ running:
   asso_thres:
     iou: 0.9
     giou: 1.5
-    m_dis: 5
 
 redundancy:
   mode: mm
   det_score_threshold: 
     iou: 0.1
     giou: 0.1
-    m_dis: 0.1
   det_dist_threshold: 
     iou: 0.1
     giou: -0.5
-    m_dis: 10
 
 data_loader:
   pc: true

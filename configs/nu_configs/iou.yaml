@@ -10,7 +10,6 @@ running:
   asso_thres:
     giou: 1.5
     iou: 0.9
-    m_dis: 11
 
 redundancy:
   mode: default
@@ -21,7 +20,6 @@ redundancy:
   det_dist_threshold: 
     iou: 0.1
     giou: -0.5
-    m_dis: 11
 
 data_loader:
   pc: false

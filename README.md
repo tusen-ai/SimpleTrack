@@ -11,7 +11,7 @@ If you find our paper or code useful for you, please consider cite us by:
   year={2021}
 }
 ```
-
+<img src="docs/simpletrack_gif.gif">
 
 ## Installation
 
@@ -37,7 +37,7 @@ For the metrics on test set, please refer to our paper or the leaderboard.
 
 To enable the better usages of our `mot_3d` library, we provide a list useful documentations, and will add more in the future.
 
-* [Read and Use the Configurations](./docs/config.md)
-* [Format of Output](./docs/output_format.md)
+* [Read and Use the Configurations](./docs/config.md). We explain how to specify the behaviors of trackers in this documentation, such as two-stage association, the thresholds for association, etc.
+* [Format of Output](./docs/output_format.md). We explain the output format for the APIs in `SimpleTrack`, so that you may directly use the functions provided.
 * Visualization with `mot_3d` (in progress)
 * Structure of `mot_3d` (in progress)
