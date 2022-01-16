@@ -30,7 +30,7 @@ We implement the `SimpleTrack` algorithm as a library `mot_3d`. Please run `pip 
 
 We provide a demo based on the first sequence with ID `10203656353524179475_7625_000_7645_000` from the validation set of [Waymo Open Dataset](https://waymo.com/open/) and the detection from [CenterPoint](https://github.com/tianweiy/CenterPoint). (We are thankful and hope that we are not violating any terms here.)
 
-First, download the [demo_data](https://drive.google.com/file/d/11tUAV6birmXI6Gk0mQ4DJbqokHlQtMk4/view?usp=sharing) and extract it locally. It contains the necessary information and is already preprocessed according to [our preprocessing programs](./docs/data_preprocess.md). To run the demo, please run the following command. It will provide interactive visualization with `plt`. Therefore, it is recommended to run this demo locally.
+First, download the [demo_data](https://drive.google.com/file/d/11tUAV6birmXI6Gk0mQ4DJbqokHlQtMk4/view?usp=sharing) and extract it locally. It contains the necessary information and is already preprocessed according to [our preprocessing programs](./docs/data_preprocess.md). To run the demo, please run the following command. It will provide interactive visualization with `matplotlib.pyplt`. Therefore, it is recommended to run this demo locally.
 
 ```bash
 python tools/demo.py \
