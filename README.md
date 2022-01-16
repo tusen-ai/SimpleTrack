@@ -11,6 +11,7 @@ If you find our paper or code useful for you, please consider cite us by:
   year={2021}
 }
 ```
+
 <img src="docs/simpletrack_gif.gif">
 
 ## Installation
