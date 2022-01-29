@@ -14,6 +14,9 @@ If you find our paper or code useful for you, please consider cite us by:
 
 <img src="docs/simpletrack_gif.gif">
 
+[ ] Accelerating the code, make the IoU/GIoU computation parallel.
+[ ] Add documentation for codebase.
+
 ## Installation
 
 ### Environment Requirements
