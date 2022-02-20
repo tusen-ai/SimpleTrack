@@ -2,7 +2,7 @@
 
 ## Data Preprocessing
 
-Please follow the command at [Data Preprocessing Documentations](./docs/data_preprocess.md). After data preprocessing, the directories to the preprocessed data are `nuscenes2hz_data_dir` and `nuscenes20hz_data_dir` for the key-frame and all-frame data of nuScenes.
+Please follow the command at [Data Preprocessing Documentations](./data_preprocess.md). After data preprocessing, the directories to the preprocessed data are `nuscenes2hz_data_dir` and `nuscenes20hz_data_dir` for the key-frame and all-frame data of nuScenes.
 
 ## Inference with SimpleTrack
 
