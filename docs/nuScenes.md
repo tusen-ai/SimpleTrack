@@ -45,7 +45,7 @@ For the setting of 2Hz, which only inferences on the key frames, run the followi
 ```bash
 python tools/nuscenes_result_creation.py \
     --name SimpleTrack2Hz \
-    --name result_folder ${nuscenes_result_dir} \
+    --result_folder ${nuscenes_result_dir} \
     --data_folder ${nuscenes2hz_data_dir}
 
 python tools/nuscenes_type_merge.py \
@@ -58,7 +58,7 @@ For the setting of 10Hz, run the following commands.
 ```bash
 python tools/nuscenes_result_creation_10hz.py \
     --name SimpleTrack10Hz \
-    --name result_folder ${nuscenes_result_dir} \
+    --result_folder ${nuscenes_result_dir} \
     --data_folder ${nuscenes20hz_data_dir}
 
 python tools/nuscenes_type_merge.py \
