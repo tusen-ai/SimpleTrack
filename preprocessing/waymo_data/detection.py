@@ -20,6 +20,7 @@ parser.add_argument('--name', type=str, default='public')
 parser.add_argument('--file_path', type=str, default='validation.bin')
 parser.add_argument('--data_folder', type=str, default='../../../datasets/waymo/mot/')
 parser.add_argument('--metadata', action='store_true', default=False)
+parser.add_argument('--id', action='store_true', default=False)
 args = parser.parse_args()
 
 
@@ -195,6 +196,6 @@ if __name__ == '__main__':
     det_folder = os.path.join(args.data_folder, 'detection')
     os.makedirs(det_folder, exist_ok=True)
     output_folder = os.path.join(det_folder, args.name, 'dets')
-    os.makedirs(args.output_folder, exist_ok=True)
+    os.makedirs(output_folder, exist_ok=True)
 
     main(args.name, args.data_folder, det_folder, args.file_path, output_folder)
