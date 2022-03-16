@@ -15,7 +15,7 @@ bash waymo_preprocess.sh ${raw_data_folder} ${data_folder} ${process_num}
 
 ### 2. Ground Truth Information
 
-The gorund truth for the 3D MOT and 3D Detection are the same. **You have to download a .bin file from Waymo Open Dataset for the ground truth, which we have no right to share according to the license.** 
+The ground truth for the 3D MOT and 3D Detection are the same. **You have to download a .bin file from Waymo Open Dataset for the ground truth, which we have no right to share according to the license.** 
 
 To decode the ground truth information, suppose `bin_path` is the path to the ground truth file, `data_folder` is the target location of data preprocess. Eventually, we store the ground truth information in `${data_folder}/detection/gt/dets/`.
 
@@ -30,7 +30,7 @@ To infer 3D MOT on your detection file, we still need the `bin_path` indicating 
 
 ```bash
 cd preprocessing/waymo_data
-python detection --name ${name} --data_folder ${data_dir} --file_path ${bin_path} --metadata
+python detection.py --name ${name} --data_folder ${data_dir} --file_path ${bin_path} --metadata --id
 ```
 
 ## nuScenes
