@@ -25,6 +25,7 @@ python tools/main_waymo.py \
     --config_path configs/waymo_configs/vc_kf_giou.yaml \
     --data_folder ${waymo_data_dir} \
     --result_folder ${waymo_result_dir} \
+    --gt_folder ${gt_dets_dir} \
     --process ${proc_num}
 
 # for pedestrian
