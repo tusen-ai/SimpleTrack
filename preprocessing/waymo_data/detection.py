@@ -67,7 +67,7 @@ def main(name, data_folder, det_folder, file_path, out_folder):
     
     # load detection file
     det_folder = os.path.join(det_folder, name)
-    f = open(file_path, 'rb')
+    f = open(os.path.join(det_folder, file_path), 'rb')
     objects = metrics_pb2.Objects()
     objects.ParseFromString(f.read())
     f.close()

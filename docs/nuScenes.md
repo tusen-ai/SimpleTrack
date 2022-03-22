@@ -6,6 +6,8 @@ Please follow the command at [Data Preprocessing Documentations](./data_preproce
 
 ## Inference with SimpleTrack
 
+**Important: Please strictly follow the config file we use.**
+
 For the setting of inference only on key frames (2Hz), run the following command. The per-sequence results are then saved in the `${nuscenes_result_dir}/SimpleTrack2Hz/summary`, with subfolders of the types of the objects containing the results for each type.
 
 ```bash
@@ -65,3 +67,7 @@ python tools/nuscenes_type_merge.py \
     --name SimpleTrack10Hz \
     --result_folder ${nuscenes_result_dir}
 ```
+
+## Files and Detailed Metrics
+
+Please see [Dropbox Link](https://www.dropbox.com/sh/8906exnes0u5e89/AAD0xLwW1nq_QiuUBaYDrQVna?dl=0).
