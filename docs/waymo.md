@@ -15,6 +15,7 @@ In the experiments,
 * `${waymo_result_dir}` is for saving tracking results;
 * `${waymo_data_dir}` is the folder to the preprocessed waymo data;
 * `${proc_num}` uses multiprocessing to inference different sequences (for your information, I generally use 202 processes, so that each one of the process runs a sequence of the validation set).
+* **Please look out for the different config files we use for each type of object.** 
 
 ```bash
 # for vehicle
@@ -67,3 +68,7 @@ python tools/waymo_pred_bin.py \
 ```
 
 Eventually, use the evaluation provided by Waymo officials by following [Quick Guide to Waymo Open Dataset](https://github.com/waymo-research/waymo-open-dataset/blob/master/docs/quick_start.md).
+
+## Files and Detailed Metrics
+
+Please see [Dropbox link](https://www.dropbox.com/sh/u6o8dcwmzya04uk/AAAUsNvTt7ubXul9dx5Xnp4xa?dl=0).

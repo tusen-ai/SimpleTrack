@@ -15,7 +15,7 @@ parser.add_argument('--visualize', action='store_true', default=False)
 parser.add_argument('--start_frame', type=int, default=0, help='start at a middle frame for debug')
 parser.add_argument('--obj_type', type=str, default='vehicle', choices=['vehicle', 'pedestrian', 'cyclist'])
 # paths
-parser.add_argument('--config_path', type=str, default='configs/config.yaml')
+parser.add_argument('--config_path', type=str, default='configs/config.yaml', help='config file path, follow the path in the documentation')
 parser.add_argument('--result_folder', type=str, default='../mot_results/')
 parser.add_argument('--data_folder', type=str, default='../datasets/waymo/mot/')
 parser.add_argument('--gt_folder', type=str, default='../datasets/waymo/mot/detection/gt/dets/')

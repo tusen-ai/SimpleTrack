@@ -33,7 +33,7 @@ We implement the `SimpleTrack` algorithm as a library `mot_3d`. Please run `pip 
 
 We provide a demo based on the first sequence with ID `10203656353524179475_7625_000_7645_000` from the validation set of [Waymo Open Dataset](https://waymo.com/open/) and the detection from [CenterPoint](https://github.com/tianweiy/CenterPoint). (We are thankful and hope that we are not violating any terms here.)
 
-First, download the [demo_data](https://drive.google.com/file/d/11tUAV6birmXI6Gk0mQ4DJbqokHlQtMk4/view?usp=sharing) and extract it locally. It contains the necessary information and is already preprocessed according to [our preprocessing programs](./docs/data_preprocess.md). To run the demo, please run the following command. It will provide interactive visualization with `matplotlib.pyplt`. Therefore, it is recommended to run this demo locally.
+First, download the [demo_data](https://www.dropbox.com/s/m8vt7t7tqofaoq2/demo_data.zip?dl=0) and extract it locally. It contains the necessary information and is already preprocessed according to [our preprocessing programs](./docs/data_preprocess.md). To run the demo, please run the following command. It will provide interactive visualization with `matplotlib.pyplt`. Therefore, it is recommended to run this demo locally.
 
 ```bash
 python tools/demo.py \
@@ -57,9 +57,9 @@ The most important function is `tracker.frame_mot()`. An object of `MOTModel` it
 
 ## Inference on Waymo Open Dataset and nuScenes
 
-Refer to the documentation of [Waymo Open Dataset Inference](./docs/waymo.md) and [nuScenes Inference](./docs/nuScenes.md).
+Refer to the documentation of [Waymo Open Dataset Inference](./docs/waymo.md) and [nuScenes Inference](./docs/nuScenes.md). **Important: please rigorously follow the config file path and instructions in the documentation to reproduce the results.**
 
-The detailed metrics on Waymo Open Dataset is at, nuScenes is at.
+The detailed metrics and files are at [Dropbox Link](https://www.dropbox.com/sh/2zcpf7wyho7x21q/AABRtGP75KHghr0wyoVqzFFXa?dl=0), Waymo Open Dataset in [Dropbox link](https://www.dropbox.com/sh/u6o8dcwmzya04uk/AAAUsNvTt7ubXul9dx5Xnp4xa?dl=0), nuScenes in [Dropbox Link](https://www.dropbox.com/sh/8906exnes0u5e89/AAD0xLwW1nq_QiuUBaYDrQVna?dl=0).
 
 For the metrics on test set, please refer to our paper or the leaderboard.
 
