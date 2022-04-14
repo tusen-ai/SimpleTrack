@@ -6,7 +6,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
 parser.add_argument('--detection_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
 parser.add_argument('--det_name', type=str, default='cp')
-parser.add_argument('--file_name', type=str, default='val.json')
+parser.add_argument('--raw_file_path', type=str, 
+                    default='/juno/u/tsadja/SimpleTrack/dataset/nuscenes/validation_2hz/detection/megvii/raw/val.json')
 parser.add_argument('--velo', action='store_true', default=False)
 parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
 parser.add_argument('--test', action='store_true', default=False)
@@ -35,11 +36,9 @@ def sample_result2bbox_array(sample):
     return trans + size + rot + [score]
 
 
-def main(det_name, file_name, detection_folder, data_folder, mode):
+def main(det_name, raw_file_path, detection_folder, data_folder, mode):
     # dealing with the paths
-    detection_folder = os.path.join(detection_folder, det_name)
-    raw_file_path = os.path.join(detection_folder, 'raw', file_name)
-    output_folder = os.path.join(detection_folder, 'dets')
+    output_folder = os.path.join(detection_folder, det_name, 'dets')
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
     
@@ -105,6 +104,12 @@ if __name__ == '__main__':
         data_folder = os.path.join(args.data_folder, 'test_{:}'.format(args.mode))
     else:
         data_folder = os.path.join(args.data_folder, 'validation_{:}'.format(args.mode))
-    detection_folder = os.path.join(data_folder, 'detection')
 
-    main(args.det_name, args.file_name, detection_folder, data_folder, args.mode)
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder)
+
+    detection_folder = os.path.join(data_folder, 'detection')
+    if not os.path.exists(detection_folder):
+        os.makedirs(detection_folder)
+
+    main(args.det_name, args.raw_file_path, detection_folder, data_folder, args.mode)
