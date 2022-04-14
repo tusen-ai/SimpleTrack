@@ -77,7 +77,7 @@ def frame_visualization(bboxes, ids, states, gt_bboxes=None, gt_ids=None, pc=Non
 
 
 def sequence_mot(configs, data_loader, obj_type, sequence_id, gt_bboxes=None, gt_ids=None, visualize=False):
-    tracker = MOTModel(configs, obj_type)
+    tracker = MOTModel(configs)
     frame_num = len(data_loader)
     IDs, bboxes, states, types = list(), list(), list(), list()
 
@@ -121,7 +121,7 @@ def main(name, obj_types, config_path, data_folder, det_data_folder, result_fold
             file_names = [fname for fname in file_names if not os.path.exists(os.path.join(summary_folder, fname))]
         
         # load model configs
-        configs = yaml.load(open(config_path, 'r'))
+        configs = yaml.load(open(config_path, 'r'), Loader=yaml.FullLoader)
     
         for file_index, file_name in enumerate(file_names[:]):
             if file_index % process != token:

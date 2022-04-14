@@ -19,13 +19,13 @@ class MOTModel:
         self.time_stamp = None         # the previous time stamp
         self.redundancy = RedundancyModule(configs) # module for no detection cases
 
-        non_key_redundancy_config = deepcopy(configs)
-        non_key_redundancy_config['redundancy'] = {
-            'mode': 'mm',
-            'det_score_threshold': {'giou': 0.1, 'iou': 0.1, 'euler': 0.1},
-            'det_dist_threshold': {'giou': -0.5, 'iou': 0.1, 'euler': 4}
-        }
-        self.non_key_redundancy = RedundancyModule(non_key_redundancy_config)
+        # non_key_redundancy_config = deepcopy(configs)
+        # non_key_redundancy_config['redundancy'] = {
+        #     'mode': 'mm',
+        #     'det_score_threshold': {'giou': 0.1, 'iou': 0.1, 'euler': 0.1},
+        #     'det_dist_threshold': {'giou': -0.5, 'iou': 0.1, 'euler': 4}
+        # }
+        # self.non_key_redundancy = RedundancyModule(non_key_redundancy_config)
 
         self.configs = configs
         self.match_type = configs['running']['match_type']
