@@ -67,7 +67,7 @@ class KalmanFilterMotionModel:
             # self.kf.Q[-1,-1] *= 0.01    # process uncertainty
             # self.kf.Q[7:, 7:] *= 0.01
 
-        elif self.covariance_type == 'nuscenes':
+        elif 'nuscenes' in self.covariance_type:
             cov_name = self.covariance_type.split('_')[1]
             cov = NuCovariance(cov_name)
             self.kf.P = cov.P[inst_type][:-1, :-1]
