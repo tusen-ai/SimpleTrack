@@ -4,12 +4,7 @@ from mot_3d.data_protos import BBox, Validity
 from tqdm import tqdm
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--name', type=str, default='debug')
-parser.add_argument('--obj_types', type=str, default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
-parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
-parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/validation_2hz/')
-args = parser.parse_args()
+
 
 
 def bbox_array2nuscenes_format(bbox_array):
@@ -77,7 +72,9 @@ def main(name, obj_types, data_folder, result_folder, output_folder):
             },
             'results': results
         }
-    
+
+        if not os.path.exists(os.path.join(output_folder, obj_type)):
+            os.makedirs(os.path.join(output_folder, obj_type))
         f = open(os.path.join(output_folder, obj_type, 'results.json'), 'w')
         json.dump(submission_file, f)
         f.close()
@@ -85,6 +82,14 @@ def main(name, obj_types, data_folder, result_folder, output_folder):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--name', type=str, default='debug')
+    parser.add_argument('--obj_types', type=str, default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
+    parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
+    parser.add_argument('--data_folder', type=str,
+                        default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/validation_2hz/')
+    args = parser.parse_args()
+
     result_folder = os.path.join(args.result_folder, args.name)
     obj_types = args.obj_types.split(',')
     output_folder = os.path.join(result_folder, 'results')

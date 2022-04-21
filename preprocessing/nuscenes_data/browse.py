@@ -53,6 +53,7 @@ def main(data_folder, vis_det, det_name):
         ids, inst_types, bboxes = gt_info['ids'], gt_info['types'], gt_info['bboxes']
         if vis_det:
             dets = np.load(os.path.join(data_folder, 'detection', det_name, 'dets', file_name), allow_pickle=True)
+            # print(dets['bboxes'])
             bboxes, inst_types = dets['bboxes'], dets['types']
         
         frame_num = len(ids)
@@ -61,7 +62,7 @@ def main(data_folder, vis_det, det_name):
                 continue
             print('FILE {:} / {:} FRAME {:}'.format(file_index + 1, len(file_names), frame_index))
 
-            mot_bbox_list = list()
+            mot_bbox_list, box_clrs = list(), list()
             ego = ego_poses[str(frame_index)]
             ego_trans, ego_rot = np.asarray(ego[:3]), Quaternion(np.asarray(ego[3:]))
             ego_matrix = transform_matrix(ego_trans, np.asarray(ego[3:]))
@@ -71,7 +72,7 @@ def main(data_folder, vis_det, det_name):
 
             frame_bboxes = bboxes[frame_index]
             for b in frame_bboxes:
-                nu_box = Box(b[:3], b[3:6], Quaternion(b[6:10]))
+                nu_box = Box(b[:3], b[3:6], Quaternion(b[6:10]), score=b[-1])
                 bottom_corners = nu_box.bottom_corners()
                 mot_bbox = BBox(
                     x=nu_box.center[0], y=nu_box.center[1], z=nu_box.center[2],
@@ -79,7 +80,16 @@ def main(data_folder, vis_det, det_name):
                     o=nu_box.orientation.yaw_pitch_roll[0]
                 )
                 mot_bbox_list.append(mot_bbox)
-            
+
+                if nu_box.score < 0.25:
+                    box_clrs.append('purple')
+                elif 0.25 <= nu_box.score < 0.5:
+                    box_clrs.append('light_blue')
+                elif 0.5 <= nu_box.score < 0.75:
+                    box_clrs.append('green')
+                else:
+                    box_clrs.append('dark_green')
+
             pc = deepcopy(pcs[str(frame_index)])[:, :3]
             pc = np.dot(pc, calib_rot.rotation_matrix.T)
             pc += calib_trans
@@ -88,8 +98,8 @@ def main(data_folder, vis_det, det_name):
             
             vis = Visualizer2D(figsize=(12, 12))
             vis.handler_pc(pc)
-            for b in mot_bbox_list:
-                vis.handler_box(b)
+            for i, b in enumerate(mot_bbox_list):
+                vis.handler_box(b, color=box_clrs[i])
             vis.show()
             vis.close()
 
@@ -101,7 +111,7 @@ if __name__ == '__main__':
     if args.test:
         data_folder = os.path.join(args.data_folder, 'test')
     elif args.mode == '2hz':
-        data_folder = os.path.join(args.data_folder, 'validation')
+        data_folder = os.path.join(args.data_folder, 'validation_2hz')
     elif args.mode == '20hz':
         data_folder = os.path.join(args.data_folder, 'val')
 

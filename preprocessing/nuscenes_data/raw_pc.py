@@ -4,7 +4,7 @@ from nuscenes.utils import splits
 from copy import deepcopy
 import matplotlib.pyplot as plt
 import multiprocessing
-
+import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--raw_data_folder', type=str, default='/mnt/truenas/scratch/weijun.liu/nuscenes/data/sets/nuscenes/')
@@ -22,7 +22,7 @@ def load_pc(path):
 
 
 def main(nusc, scene_names, root_path, pc_folder, mode, pid=0, process=1):
-    for scene_index, scene_info in enumerate(nusc.scene):
+    for scene_index, scene_info in tqdm.tqdm(enumerate(nusc.scene)):
         if scene_index % process != pid:
             continue
         scene_name = scene_info['name']
@@ -93,9 +93,10 @@ if __name__ == '__main__':
     else:
         val_scene_names = splits.create_splits_scenes()['val']
         nusc = NuScenes(version='v1.0-trainval', dataroot=args.raw_data_folder, verbose=True)
-        pool = multiprocessing.Pool(args.process)
-        for pid in range(args.process):
-            result = pool.apply_async(main, args=(nusc, test_scene_names, 
-                args.raw_data_folder, pc_folder, args.mode, pid, args.process))
-        pool.close()
-        pool.join()
+        result = main(nusc, val_scene_names, args.raw_data_folder, pc_folder, args.mode, 0, args.process)
+        # pool = multiprocessing.Pool(args.process)
+        # for pid in range(args.process):
+        #     result = pool.apply_async(main, args=(nusc, val_scene_names,
+        #         args.raw_data_folder, pc_folder, args.mode, pid, args.process))
+        # pool.close()
+        # pool.join()

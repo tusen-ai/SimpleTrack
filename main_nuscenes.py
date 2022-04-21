@@ -8,7 +8,11 @@ from mot_3d.frame_data import FrameData
 from data_loader import NuScenesLoader
 from pyquaternion import Quaternion
 from nuscenes.utils.data_classes import Box
-
+import nuscenes_result_creation as nusc_create_results
+import nuscenes_type_merge as nusc_merge_results
+from nuscenes.eval.tracking.evaluate import TrackingEval
+from nuscenes.eval.common.config import config_factory
+from nusc_metric_postprocess import compute_motas
 
 parser = argparse.ArgumentParser()
 # running configurations
@@ -24,6 +28,7 @@ parser.add_argument('--config_path', type=str, default='configs/config.yaml')
 parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
 parser.add_argument('--data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
 parser.add_argument('--det_data_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/datasets/nuscenes/')
+parser.add_argument('--nuscenes_dataset_dir', type=str, default='/media/colton/ColtonSSD/nuscenes-raw')
 parser.add_argument('--test', action='store_true', default=False)
 args = parser.parse_args()
 
@@ -181,3 +186,20 @@ if __name__ == '__main__':
     else:
         main(args.name, obj_types, args.config_path, args.data_folder, det_data_folder, 
             result_folder, args.start_frame, 0, 1)
+
+    # merge into folder
+    nusc_obj_types = ['car', 'bus', 'trailer', 'truck', 'pedestrian', 'bicycle', 'motorcycle']
+    output_folder = os.path.join(result_folder, 'results')
+    nusc_create_results.main('', nusc_obj_types, args.data_folder, result_folder, output_folder)
+    nusc_merge_results.main('', nusc_obj_types, output_folder)
+    #
+    # run nuscenes evaluation
+    nusc_track_cfg = config_factory('tracking_nips_2019')
+    track_eval = TrackingEval(config=nusc_track_cfg, result_path=os.path.join(output_folder, 'results.json'), eval_set='test' if args.test else 'val',
+                              output_dir=os.path.join(output_folder, "official-eval"), nusc_version='v1.0-test' if args.test else 'v1.0-trainval',
+                              nusc_dataroot=args.nuscenes_dataset_dir, verbose=True)  # , render_classes=["pedestrian"]
+    tracking_summary = track_eval.main(render_curves=True)
+
+    # create additional nuscenes MOTA metrics
+    compute_motas(metric_details_path=os.path.join(output_folder, "official-eval", "metrics_details.json"),
+                  outdir=os.path.join(output_folder, "official-eval"))

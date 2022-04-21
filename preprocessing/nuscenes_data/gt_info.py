@@ -12,10 +12,16 @@ parser.add_argument('--mode', type=str, default='2hz', choices=['20hz', '2hz'])
 args = parser.parse_args()
 
 
-def instance_info2bbox_array(info):
+def boxinstance_info2bbox_array(info):
     translation = info.center.tolist()
     size = info.wlh.tolist()
     rotation = info.orientation.q.tolist()
+    return translation + size + rotation
+
+def dictinstance_info2bbox_array(info):
+    translation = info['translation']
+    size = info['size']
+    rotation = info['rotation']
     return translation + size + rotation
 
 
@@ -45,7 +51,7 @@ def main(nusc, scene_names, root_path, gt_folder):
                     instance = nusc.get('sample_annotation', ann)
                     frame_ids.append(instance['instance_token'])
                     frame_types.append(instance['category_name'])
-                    frame_bboxes.append(instance_info2bbox_array(instance))
+                    frame_bboxes.append(dictinstance_info2bbox_array(instance))
             elif args.mode == '20hz':
                 frame_data = nusc.get('sample_data', cur_sample_token)
                 lidar_data = nusc.get('sample_data', cur_sample_token)
@@ -53,18 +59,21 @@ def main(nusc, scene_names, root_path, gt_folder):
                 for inst in instances:
                     frame_ids.append(inst.token)
                     frame_types.append(inst.name)
-                    frame_bboxes.append(instance_info2bbox_array(inst))
+                    frame_bboxes.append(boxinstance_info2bbox_array(inst))
             
             IDS.append(frame_ids)
             inst_types.append(frame_types)
             bboxes.append(frame_bboxes)
 
             # clean up and prepare for the next
-            cur_sample_token = lidar_data['next']
+            if args.mode == '20hz':
+                cur_sample_token = lidar_data['next']
+            else:
+                cur_sample_token = frame_data['next']
             if cur_sample_token == '':
                 break
 
-        np.savez_compressed(os.path.join(pc_folder, '{:}.npz'.format(scene_name)), 
+        np.savez_compressed(os.path.join(gt_folder, '{:}.npz'.format(scene_name)),
             ids=IDS, types=inst_types, bboxes=bboxes)
         pbar.update(1)
     pbar.close()

@@ -2,12 +2,6 @@ import os, argparse, json, numpy as np
 from pyquaternion import Quaternion
 from mot_3d.data_protos import BBox, Validity
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--name', type=str, default='debug')
-parser.add_argument('--obj_types', default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
-parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
-args = parser.parse_args()
-
 
 def main(name, obj_types, result_folder):
     raw_results = list()
@@ -37,6 +31,12 @@ def main(name, obj_types, result_folder):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--name', type=str, default='debug')
+    parser.add_argument('--obj_types', default='car,bus,trailer,truck,pedestrian,bicycle,motorcycle')
+    parser.add_argument('--result_folder', type=str, default='/mnt/truenas/scratch/ziqi.pang/nu_mot_results/')
+    args = parser.parse_args()
+
     result_folder = os.path.join(args.result_folder, args.name, 'results')
     obj_types = args.obj_types.split(',')
     main(args.name, obj_types, result_folder)
