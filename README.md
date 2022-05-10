@@ -21,7 +21,7 @@ If you find our paper or code useful for you, please consider cite us by:
 
 ### Environment Requirements
 
-`SimpleTrack` requires `python>=3.6` and the packages of `pip install -r requiremens.txt`. For the experiments on Waymo Open Dataset, please install the devkit following the instructions at [waymo open dataset devkit](https://github.com/waymo-research/waymo-open-dataset).
+`SimpleTrack` requires `python>=3.6` and the packages of `pip install -r requirements.txt`. For the experiments on Waymo Open Dataset, please install the devkit following the instructions at [waymo open dataset devkit](https://github.com/waymo-research/waymo-open-dataset).
 
 ### Installation
 
