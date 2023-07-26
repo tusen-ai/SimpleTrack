@@ -210,8 +210,8 @@ def giou3d(box_a: BBox, box_b: BBox):
     reca, recb = Polygon(boxa_corners), Polygon(boxb_corners)
     ha, hb = box_a.h, box_b.h
     za, zb = box_a.z, box_b.z
-    overlap_height = max(0, min((za + ha / 2) - (zb - hb / 2), (zb + hb / 2) - (za - ha / 2)))
-    union_height = max((za + ha / 2) - (zb - hb / 2), (zb + hb / 2) - (za - ha / 2))
+    overlap_height = max(0, min([(za + ha / 2) - (zb - hb / 2), (zb + hb / 2) - (za - ha / 2), ha, hb]))
+    union_height = max([(za + ha / 2) - (zb - hb / 2), (zb + hb / 2) - (za - ha / 2), ha, hb])
     
     # compute intersection and union
     I = reca.intersection(recb).area * overlap_height
